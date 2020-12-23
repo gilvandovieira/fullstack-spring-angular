@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -13,8 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TodoDTO {
-    private String todo;
+    @Builder.Default
+    private String todo = "";
     private long autor;
-    private boolean feito;
-    private List<Usuario> compartilhados;
+    @Builder.Default
+    private boolean feito = false;
+    @Builder.Default
+    private List<Long> compartilhados = new LinkedList<>();
 }

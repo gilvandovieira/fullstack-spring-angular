@@ -38,15 +38,20 @@ public class GerenciadorService {
         return todoRepository.findAllByAutorOrCompartilhadosIn(usuario, List.of(usuario));
     }
 
-    public Todo salvaTodo(long usuario, String todo, List<Usuario> compartilhados) {
-        Todo todoEntity = new Todo();
+    public Todo salvaTodo(long usuario, String todo, List<Long> compartilhados) {
+        Todo todoEntity = Todo.builder().build();
 
-        Usuario usuarioEntity = retornaUsuario(usuario);
-        todoEntity.setAutor(usuarioEntity);
+        try {
+            Usuario usuarioEntity = retornaUsuario(usuario);
+            todoEntity.setAutor(usuarioEntity);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-
-        if (!(compartilhados == null || compartilhados.size() == 0)) {
-            todoEntity.setCompartilhados(this.usuarioRepository.findAllByIdIn(compartilhados));
+        if (!(compartilhados == null || compartilhados.size() <= 0)) {
+            List<Usuario> usuarios = this.usuarioRepository.findByIdIn(compartilhados);
+            System.out.println(usuarios);
+            todoEntity.setCompartilhados(usuarios);
         }
 
         todoEntity.setTodo(todo);
@@ -55,7 +60,7 @@ public class GerenciadorService {
 
     }
 
-    public Todo alteraTodo(long id, long usuario, String todo, boolean feito, List<Usuario> compartilhados) throws RuntimeException {
+    public Todo alteraTodo(long id, long usuario, String todo, boolean feito, List<Long> compartilhados) throws RuntimeException {
         Todo entity = retornaTodo(id);
 
 
@@ -64,7 +69,12 @@ public class GerenciadorService {
 
         entity.setFeito(feito);
         entity.setTodo(todo);
-        entity.setCompartilhados(compartilhados);
+        
+        if (!(compartilhados == null || compartilhados.size() <= 0)) {
+            List<Usuario> usuarios = this.usuarioRepository.findByIdIn(compartilhados);
+            System.out.println(usuarios);
+            entity.setCompartilhados(usuarios);
+        }
 
         return this.todoRepository.save(entity);
     }

@@ -11,9 +11,9 @@ import java.util.List;
 
 @Entity
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class Todo {
 
     @Id
@@ -29,7 +29,7 @@ public class Todo {
     @Builder.Default
     private boolean feito = false;
 
-    @OneToMany
     @Builder.Default
+    @OneToMany
     private List<Usuario> compartilhados = new LinkedList<>();
 }
